@@ -1,0 +1,7 @@
+#!/bin/bash
+#Generates a password, substitutes this password into the word PLACEHOLDER in a given file, drops and then creates a user
+USER_PASS=$(openssl rand -base64 32 | sed 's/[^a-zA-Z0-9]//g')
+sed -i "s/PLACEHOLDER/$USER_PASS/" $2
+mysql -h127.0.0.1 -P3306 -uteamcity -e"DROP USER '$1'@'localhost';"
+mysql -h127.0.0.1 -P3306 -uteamcity -e"CREATE USER '$1'@'localhost' IDENTIFIED BY '$USER_PASS';"
+echo "Created user $1 and substituted $2";
